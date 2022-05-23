@@ -3,6 +3,8 @@ title: "NB_Rin3 Report"
 author: "Natasha Bennett"
 date: "5/22/2022"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -12,6 +14,7 @@ library(tidyverse)
 library(dplyr)
 library(janitor)
 library(lubridate)
+library(ggridges)
 
 enchanted_lotto <-read_csv("enchantments_data.csv") %>% 
   clean_names() %>%
@@ -19,44 +22,23 @@ enchanted_lotto <-read_csv("enchantments_data.csv") %>%
 
 ```
 
-# Introduction
+```{r}
+enchanted_lotto %>%
+  drop_na(preferred_entry_date_1) %>%
+ggplot(data = enchanted_lotto,
+       mapping = aes(x = preferred_entry_date_1))+
+  geom_freqpoly()
+```
 
-The Enchantment Lakes is a pristine alpline area just outside of Leavenworth, Washington. *The Enchantments*, as they are colloquially called, are well-known for their majestic, other-worldy landscapes. The name is designed to invoke a wonderland, fairytale setting. At approximately 4,500 feet of elevation and with 700 lakes (see Wikipedia), hiking in the Enchantments warrants a multi-day backpacking trip that would allow hikers to take their time with brutal uphill hiking conditions and to relish in the beauty.
-
-The Enchantments was once one of Washington's best kept secrets. That is no longer the case. With such a high demand, backpacking the Enchantments can only be done with a permit--which are no longer easy to secure. The vast majority of permits are distributed via a lottery system. There are **limited** walk-in permits and *only* for certain areas or zones. 
-
-# Applying for a permit
-
-Any group interested in securing a backpacking permit for the Enchantments in any given year must enter a lottery during the last two weeks of February of that year.   One permit is required per group, and groups can be as large as 8 individuals.
-
-- Hopeful individuals may only submit one application or entry. 
-- Each entry allows applicants to enter three desired permit zone and date combinations. The choices are rank ordered.
-
-A successful applicant will receive permit for the the first ranked zone/date combination choice that is still available.  If availability does not align with the applicant's choices, their application will be unsuccessful.
-
-## The type of permit you apply for matters
-
-The Enchantments are divided into 5 permit zones, which determine where a group is allowed to camp. According to Recreation.gov, "There is a limited number of overnight groups that may enter a given zone each day. A group may consist of up to eight people, must camp in the Zone indicated on their permit for up to 14 days. The number of overnight groups/people that may enter each day is split by zone during permit season:
-
-- Core Enchantment Zone: 24 people a day
-- Snow Lake Zone: 5 groups a day
-- Colchuck Lake Zone: 3 groups a day
-- Stuart Lake Zone: 4 groups a day
-- Eightmile/Caroline Zone : 3 groups a day"
-
-The **Core Enchantment Zone** is the most coveted permit zone for two reasons. First, it is the most beautiful section of the area. Secondly, backpackers with a Core permit are permitted to camp in any zone they would like., allowing them to do the full trail and take the easier trail on the way in  This permit is also the most difficult to secure. Only 24 *individuals* are allowed to camp in the Core Zone each day, meaning it could mean as few as 3 permits are issued per day. **Note: only 16 visitor spaces are administered through the lottery system. The remaining 8 are reserved for walk-in permits.** 
-
-The other 4 zones are less coveted. Colchuck and Snow are second and third in popularity, because theyborder to the Core Enchantments area. Stuart and Eightmile are further away from the Core Enchantment area, making them therefore less popular. Unlike the Core Enchantment area, these zones restrict the number of *groups* not *individuals*.
-
-Using public available Enchantments permit lottery data from 2021 acquired from Recreation.gov, this report will dig deeper into what combinations of permit types and dates are likely to yield a successful application of any type.
+```{r}
+enchanted_lotto %>%
+  drop_na(preferred_entry_date_1) %>%
+ggplot(data = enchanted_lotto,
+       mapping = aes(x = preferred_entry_date_1,
+                     y = preferred_division_1))+
+  geom_density_ridges(bandwidth = 9)+
+  scale_x_date(date_breaks = "month",
+               date_labels = "%b")
+```
 
 
-# Research questions
-
-- In 2021, what were the entry patterns among applicants?
-- Are applicants ranking their choices rationally? (i.e. placing the lowest probability entries first)?
-- What combination of zone/date entries were statistically most likely to secure any permit at all?
-- How does the number of people in your group applying for a permit affect your group's chances of securing any permit at all?
-- In 2021, how elusive was any permit in the Core Enchantments? 
-- To what extent does group size affect the chance of securing a Core Enchantments permit at all?
-- This year, I was lucky enough to secure a Core Enchantments Permit for my group of 8 individuals for the last weekend in August.In 2021, just how lucky was someone to receive a Core Enchantments permit for 8 people the last weekend of August?
